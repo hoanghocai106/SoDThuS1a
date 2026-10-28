@@ -1,0 +1,18 @@
+{
+  "name": "Sổ Chi Tiết Doanh Thu S1a-HKD",
+  "short_name": "Sổ S1a-HKD",
+  "description": "Sổ chi tiết doanh thu bán hàng hóa, dịch vụ theo Thông tư 152/2025/TT-BTC",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135679.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
