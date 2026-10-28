@@ -62,9 +62,22 @@
       align-items: center;
       gap: 12px;
     }
-    .app-title h1 { font-size: 1.15rem; font-weight: 700; }
+    .app-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .version-badge {
+      background: rgba(255,255,255,0.2);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
     .app-title p { font-size: 0.78rem; opacity: 0.9; }
-    .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .header-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
     /* Layout */
     .container {
@@ -160,10 +173,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       padding: 9px 14px;
       border-radius: 8px;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       border: none;
@@ -172,6 +185,7 @@
     .btn-primary { background: var(--primary); color: white; width: 100%; padding: 12px; font-size: 1rem; }
     .btn-purple { background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; }
     .btn-success { background: var(--success); color: white; }
+    .btn-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
     .btn-outline { background: white; color: #1e293b; border: 1px solid var(--border); }
     .btn-danger { background: #fee2e2; color: var(--danger); }
     .btn-sm { padding: 6px 10px; font-size: 0.78rem; }
@@ -183,13 +197,21 @@
       border-radius: 10px;
       padding: 12px;
       margin-bottom: 14px;
+    }
+    .scan-cta-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      margin-bottom: 8px;
     }
     .scan-cta-text h4 { font-size: 0.9rem; color: #5b21b6; font-weight: 700; }
-    .scan-cta-text p { font-size: 0.76rem; color: #6d28d9; }
+    .scan-cta-text p { font-size: 0.75rem; color: #6d28d9; }
+    .quick-scan-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
 
     /* Stats Bar */
     .stats-grid {
@@ -328,9 +350,7 @@
       max-height: 92vh;
       overflow-y: auto;
     }
-    .modal.modal-lg {
-      max-width: 960px;
-    }
+    .modal.modal-lg { max-width: 980px; }
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -341,28 +361,31 @@
     }
     .modal-header h3 { font-size: 1.02rem; color: var(--primary); }
 
-    /* Import & OCR Staging Area */
+    /* Import & Capture Grid (5 options) */
     .import-methods-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
       margin-bottom: 14px;
     }
-    @media (max-width: 680px) {
-      .import-methods-grid { grid-template-columns: 1fr; }
-    }
     .upload-zone {
-      border: 2px dashed #94a3b8;
+      border: 1.5px dashed #94a3b8;
       border-radius: 10px;
-      padding: 14px;
+      padding: 12px 10px;
       text-align: center;
       background: #f8fafc;
       cursor: pointer;
       transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     .upload-zone:hover { border-color: var(--primary); background: #eff6ff; }
-    .upload-zone h4 { font-size: 0.92rem; color: #1e293b; margin-bottom: 4px; }
-    .upload-zone p { font-size: 0.76rem; color: #64748b; }
+    .upload-zone:active { transform: scale(0.98); }
+    .upload-zone .zone-icon { font-size: 1.45rem; margin-bottom: 4px; }
+    .upload-zone h4 { font-size: 0.85rem; color: #1e293b; margin-bottom: 2px; font-weight: 700; }
+    .upload-zone p { font-size: 0.72rem; color: #64748b; line-height: 1.3; }
 
     .staging-workspace {
       display: grid;
@@ -453,11 +476,15 @@
   <header class="app-header">
     <div class="header-inner">
       <div class="app-title">
-        <h1>📘 SỔ DOANH THU S1a-HKD</h1>
-        <p>Thông tư 152/2025/TT-BTC • Lưu cục bộ & Quét ảnh thông minh</p>
+        <h1>
+          📘 SỔ DOANH THU S1a-HKD
+          <span class="version-badge">v3.0</span>
+        </h1>
+        <p>Thông tư 152/2025/TT-BTC • Lưu cục bộ & Nhập ảnh từ Album/Chụp màn hình</p>
       </div>
       <div class="header-actions">
-        <button class="btn btn-purple btn-sm" onclick="openImportModal()">📷 Chụp ảnh / Import</button>
+        <button class="btn btn-purple btn-sm" onclick="openImportModal()">📷 Nhập từ Ảnh / Excel</button>
+        <button class="btn btn-warning btn-sm" onclick="forceUpdateApp()" title="Tải phiên bản giao diện mới nhất từ GitHub (Không mất dữ liệu)">🔄 Cập nhật App</button>
         <button class="btn btn-outline btn-sm" onclick="openModal('hkdModal')">⚙️ Thông tin HKD</button>
         <button class="btn btn-outline btn-sm" onclick="openModal('backupModal')">💾 Sao lưu</button>
         <button class="btn btn-outline btn-sm" onclick="openModal('securityModal')">🔐 Mã PIN</button>
@@ -471,13 +498,18 @@
     <!-- CỘT TRÁI: NHẬP DOANH THU -->
     <section class="left-panel">
       <div class="card">
-        <!-- NÚT CHỤP ẢNH / IMPORT NHANH -->
+        <!-- KHUNG CHỌN ẢNH TỪ ALBUM / DÁN ẢNH CHỤP MÀN HÌNH NHANH -->
         <div class="scan-cta-box">
-          <div class="scan-cta-text">
-            <h4>📷 Quét ảnh / Import bảng kê</h4>
-            <p>Chụp bill, sổ viết tay hoặc tải file Excel</p>
+          <div class="scan-cta-top">
+            <div class="scan-cta-text">
+              <h4>📷 Điền tự động từ Ảnh / Bảng kê</h4>
+              <p>Chọn ảnh Album, dán ảnh chụp màn hình hoặc chụp mới</p>
+            </div>
           </div>
-          <button type="button" class="btn btn-purple btn-sm" onclick="openImportModal()">Mở ngay</button>
+          <div class="quick-scan-btns">
+            <button type="button" class="btn btn-purple btn-sm" onclick="triggerAlbumFromHome()">🖼️ Chọn ảnh Album</button>
+            <button type="button" class="btn btn-outline btn-sm" style="border-color:#8b5cf6; color:#5b21b6;" onclick="openImportModalAndPaste()">📋 Dán ảnh / Khác</button>
+          </div>
         </div>
 
         <div class="card-title">
@@ -521,9 +553,12 @@
       </div>
 
       <div class="card" style="font-size: 0.83rem; color: #475569;">
-        <div class="card-title" style="font-size: 0.9rem;">🛡️ An toàn dữ liệu</div>
+        <div class="card-title" style="font-size: 0.9rem;">🛡️ An toàn & Cập nhật</div>
         <p style="margin-bottom: 6px;">• <b>Bản sao lưu gần nhất:</b> <span id="lastBackupText" style="font-weight: 600; color: var(--warning);">Chưa sao lưu</span></p>
-        <button class="btn btn-outline btn-sm" style="width:100%; margin-top: 6px;" onclick="quickBackupDownload()">⬇️ Tải nhanh file dự phòng (.json)</button>
+        <div style="display:flex; gap:6px; margin-top: 8px;">
+          <button class="btn btn-outline btn-sm" style="flex:1;" onclick="quickBackupDownload()">⬇️ Tải file dự phòng</button>
+          <button class="btn btn-warning btn-sm" onclick="forceUpdateApp()">🔄 Cập nhật App</button>
+        </div>
       </div>
     </section>
 
@@ -619,45 +654,69 @@
     </section>
   </main>
 
-  <!-- MODAL MỚI: CHỤP ẢNH / IMPORT DOANH THU & CHỈNH SỬA TRƯỚC KHI LƯU -->
+  <!-- MODAL: CHỌN ẢNH ALBUM / CHỤP MÀN HÌNH / CAMERA / IMPORT EXCEL -->
   <div id="importModal" class="modal-backdrop">
     <div class="modal modal-lg">
       <div class="modal-header">
-        <h3>📷 Chụp Ảnh Kết Quả Doanh Thu / Import Bảng Kê (Có chỉnh sửa trước khi lưu)</h3>
+        <h3>📷 Nhập Doanh Thu Tự Động (Album Ảnh / Chụp Màn Hình / Camera / Excel)</h3>
         <button class="btn btn-outline btn-sm" onclick="closeModal('importModal')">✕</button>
       </div>
 
-      <!-- CẤU HÌNH CHẾ ĐỘ ĐỌC ẢNH (TESSERACT OCR HOẶC GEMINI AI) -->
+      <!-- CẤU HÌNH CÔNG CỤ ĐỌC ẢNH -->
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.82rem;">
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;">
-          <div>
-            <strong>Công cụ đọc ảnh:</strong>
-            <label style="display:inline-flex; align-items:center; gap:4px; margin-left:8px; cursor:pointer;">
-              <input type="radio" name="ocrEngine" value="local" checked onchange="toggleApiKeyInput()" />
-              OCR Trực tiếp (Miễn phí, không cần Key)
-            </label>
-            <label style="display:inline-flex; align-items:center; gap:4px; margin-left:10px; cursor:pointer;">
-              <input type="radio" name="ocrEngine" value="gemini" onchange="toggleApiKeyInput()" />
-              AI Thông minh (Gemini Vision - Chuẩn xác cho sổ viết tay/bảng nhiều dòng)
-            </label>
-          </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+          <strong>Bộ đọc ảnh:</strong>
+          <label style="display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="ocrEngine" value="local" checked onchange="toggleApiKeyInput()" />
+            OCR Trực tiếp (Miễn phí)
+          </label>
+          <label style="display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="radio" name="ocrEngine" value="gemini" onchange="toggleApiKeyInput()" />
+            AI Gemini Vision (Đọc chuẩn sổ viết tay & bảng nhiều dòng)
+          </label>
         </div>
         <div id="geminiKeyWrap" style="display:none; margin-top: 8px;">
-          <input type="password" id="geminiApiKeyInput" placeholder="Dán Google Gemini API Key của bạn vào đây (tự động lưu trên máy)..." oninput="saveGeminiKey(this.value)" style="padding: 7px 10px; font-size: 0.82rem;" />
+          <input type="password" id="geminiApiKeyInput" placeholder="Dán Google Gemini API Key vào đây (tự động lưu trên máy)..." oninput="saveGeminiKey(this.value)" style="padding: 7px 10px; font-size: 0.82rem;" />
         </div>
       </div>
 
-      <!-- 2 Ô CHỌN NGUỒN DỮ LIỆU -->
+      <!-- 5 CÁCH LẤY ẢNH & DỮ LIỆU -->
       <div class="import-methods-grid">
-        <div class="upload-zone" onclick="document.getElementById('imageCaptureInput').click()">
-          <h4>📸 1. Chụp ảnh / Chọn ảnh Doanh thu</h4>
-          <p>Hóa đơn, màn hình chuyển khoản, sổ chép tay (.jpg, .png)</p>
-          <input type="file" id="imageCaptureInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageSelected(event)" />
+        <!-- 1. Chọn từ Album / Thư viện ảnh (Không có capture để mở Album trên iOS/Android) -->
+        <div class="upload-zone" onclick="document.getElementById('albumInput').click()">
+          <div class="zone-icon">🖼️</div>
+          <h4>Chọn ảnh từ Album</h4>
+          <p>Mở Thư viện ảnh điện thoại hoặc tệp ảnh trong máy</p>
+          <input type="file" id="albumInput" accept="image/*" style="display:none" onchange="handleImageSelected(event)" />
         </div>
 
+        <!-- 2. Dán ảnh vừa chụp màn hình (Clipboard / Ctrl+V) -->
+        <div class="upload-zone" onclick="pasteImageFromClipboard()">
+          <div class="zone-icon">📋</div>
+          <h4>Dán ảnh chụp màn hình</h4>
+          <p>Bấm vào đây hoặc nhấn <b>Ctrl+V / Cmd+V</b> để dán ảnh</p>
+        </div>
+
+        <!-- 3. Chụp màn hình trực tiếp (Screen Capture API) -->
+        <div class="upload-zone" onclick="captureScreenDirectly()">
+          <div class="zone-icon">🖥️</div>
+          <h4>Chụp màn hình trực tiếp</h4>
+          <p>Chụp ngay cửa sổ ứng dụng / màn hình đang mở</p>
+        </div>
+
+        <!-- 4. Mở Camera chụp trực tiếp -->
+        <div class="upload-zone" onclick="document.getElementById('cameraInput').click()">
+          <div class="zone-icon">📸</div>
+          <h4>Mở Camera chụp mới</h4>
+          <p>Chụp trực tiếp hóa đơn lẻ hoặc sổ ghi tay</p>
+          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageSelected(event)" />
+        </div>
+
+        <!-- 5. Import file Excel / CSV -->
         <div class="upload-zone" onclick="document.getElementById('excelImportInput').click()">
-          <h4>📊 2. Import từ file Excel / CSV</h4>
-          <p>File xuất từ máy POS, sao kê hoặc file Mẫu S1a-HKD (.xlsx, .xls, .csv)</p>
+          <div class="zone-icon">📊</div>
+          <h4>Import Excel / CSV</h4>
+          <p>Chọn file .xlsx, .xls, .csv xuất từ máy POS/sao kê</p>
           <input type="file" id="excelImportInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelSelected(event)" />
         </div>
       </div>
@@ -670,19 +729,17 @@
 
       <!-- KHU VỰC ĐỐI CHIẾU ẢNH & BẢNG CHỈNH SỬA TRƯỚC KHI LƯU -->
       <div class="staging-workspace" id="stagingWorkspace" style="display:none;">
-        <!-- Cột trái: Xem ảnh chụp & văn bản gốc -->
         <div>
           <div class="img-preview-box" id="imgPreviewContainer" style="display:none;">
             <div style="font-size: 0.76rem; font-weight: 700; color: #475569; margin-bottom: 6px;">Ảnh gốc để đối chiếu</div>
             <img id="scannedImagePreview" src="" alt="Preview" />
           </div>
           <div id="rawOcrBox" style="margin-top: 8px; display:none;">
-            <label style="font-size: 0.75rem;">Chữ đọc được từ ảnh (có thể copy):</label>
+            <label style="font-size: 0.75rem;">Chữ đọc được từ ảnh:</label>
             <textarea id="rawOcrText" rows="4" style="font-size: 0.78rem; padding: 6px;"></textarea>
           </div>
         </div>
 
-        <!-- Cột phải: Bảng chỉnh sửa từng dòng trước khi lưu -->
         <div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
             <span style="font-size: 0.88rem; font-weight: 700; color: var(--primary);">
@@ -843,7 +900,6 @@
       lastBackup: null
     };
 
-    // Danh sách dòng tạm để người dùng kiểm tra & chỉnh sửa trước khi lưu
     let stagingRows = [];
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -858,6 +914,9 @@
 
       const savedGeminiKey = localStorage.getItem(GEMINI_KEY_STORAGE) || '';
       document.getElementById('geminiApiKeyInput').value = savedGeminiKey;
+
+      // Lắng nghe sự kiện nhấn Ctrl+V / Cmd+V để dán ảnh chụp màn hình ở bất cứ đâu
+      window.addEventListener('paste', handleGlobalPaste);
     });
 
     function initPWA() {
@@ -880,6 +939,31 @@
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       }
+    }
+
+    // --- NÚT CẬP NHẬT PHIÊN BẢN MỚI NGAY TRÊN GIAO DIỆN ---
+    async function forceUpdateApp() {
+      showToast('🔄 Đang xóa bộ nhớ đệm cũ và tải bản mới nhất...');
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            await reg.unregister();
+          }
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          for (const key of keys) {
+            await caches.delete(key);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      setTimeout(() => {
+        const cleanUrl = window.location.origin + window.location.pathname + '?v=' + Date.now();
+        window.location.replace(cleanUrl);
+      }, 600);
     }
 
     function loadFromStorage() {
@@ -905,7 +989,7 @@
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2400);
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
 
     function getTodayIso() {
@@ -945,7 +1029,6 @@
       return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
     }
 
-    // Chuyển đổi ngày bất kỳ (DD/MM/YYYY, DD-MM-YYYY) sang YYYY-MM-DD
     function normalizeDateToIso(raw) {
       if (!raw) return getTodayIso();
       const s = String(raw).trim();
@@ -964,12 +1047,18 @@
       return getTodayIso();
     }
 
-    // --- CHỨC NĂNG CHỤP ẢNH / IMPORT & BẢNG CHỈNH SỬA TRƯỚC KHI LƯU ---
+    // --- CHỨC NĂNG CHỌN ẢNH ALBUM / DÁN ẢNH CHỤP MÀN HÌNH / CHỤP MÀN HÌNH TRỰC TIẾP ---
     function openImportModal() {
       openModal('importModal');
-      if (stagingRows.length === 0) {
-        // Tạo sẵn 1 dòng mẫu trống nếu người dùng muốn vừa nhìn ảnh vừa gõ
-      }
+    }
+
+    function triggerAlbumFromHome() {
+      openModal('importModal');
+      document.getElementById('albumInput').click();
+    }
+
+    function openImportModalAndPaste() {
+      openModal('importModal');
     }
 
     function toggleApiKeyInput() {
@@ -991,47 +1080,126 @@
       bar.style.width = (percent || 0) + '%';
     }
 
-    // Xử lý khi người dùng chụp ảnh hoặc chọn ảnh
-    async function handleImageSelected(event) {
+    // Xử lý chung cho mọi nguồn ảnh (Album, Camera, Clipboard, Chụp màn hình)
+    async function processImageDataUrl(base64DataUrl, mimeType = 'image/png') {
+      openModal('importModal');
+      document.getElementById('scannedImagePreview').src = base64DataUrl;
+      document.getElementById('imgPreviewContainer').style.display = 'block';
+      document.getElementById('stagingWorkspace').style.display = 'grid';
+
+      const engine = document.querySelector('input[name="ocrEngine"]:checked').value;
+      const apiKey = document.getElementById('geminiApiKeyInput').value.trim();
+
+      if (engine === 'gemini' && apiKey) {
+        await extractImageWithGemini(base64DataUrl, mimeType, apiKey);
+      } else {
+        if (engine === 'gemini' && !apiKey) {
+          showToast('Chưa có Gemini Key, chuyển sang đọc OCR trực tiếp!');
+        }
+        await extractImageWithLocalOCR(base64DataUrl);
+      }
+    }
+
+    // 1. Khi chọn ảnh từ Album hoặc chụp từ Camera
+    function handleImageSelected(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const base64DataUrl = e.target.result;
-        document.getElementById('scannedImagePreview').src = base64DataUrl;
-        document.getElementById('imgPreviewContainer').style.display = 'block';
-        document.getElementById('stagingWorkspace').style.display = 'grid';
-
-        const engine = document.querySelector('input[name="ocrEngine"]:checked').value;
-        const apiKey = document.getElementById('geminiApiKeyInput').value.trim();
-
-        if (engine === 'gemini' && apiKey) {
-          await extractImageWithGemini(base64DataUrl, file.type, apiKey);
-        } else {
-          if (engine === 'gemini' && !apiKey) {
-            alert('Bạn chưa nhập Gemini API Key, hệ thống sẽ tự động chuyển sang OCR Nội bộ miễn phí!');
-          }
-          await extractImageWithLocalOCR(base64DataUrl);
-        }
+        await processImageDataUrl(e.target.result, file.type);
       };
       reader.readAsDataURL(file);
       event.target.value = '';
     }
 
-    // Cách 1A: Đọc ảnh bằng Google Gemini Vision API (Nhận diện bảng kê nhiều dòng & chữ viết tay)
+    // 2A. Khi nhấn Ctrl+V / Cmd+V dán ảnh chụp màn hình
+    function handleGlobalPaste(event) {
+      const items = (event.clipboardData || event.originalEvent.clipboardData)?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          event.preventDefault();
+          const blob = item.getAsFile();
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            showToast('📋 Đã nhận ảnh dán từ bộ nhớ tạm!');
+            await processImageDataUrl(e.target.result, blob.type);
+          };
+          reader.readAsDataURL(blob);
+          return;
+        }
+      }
+    }
+
+    // 2B. Khi bấm nút "📋 Dán ảnh chụp màn hình" trên điện thoại / máy tính
+    async function pasteImageFromClipboard() {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+          alert('Trình duyệt của bạn không hỗ trợ nút đọc Clipboard tự động. Hãy nhấn tổ hợp phím Ctrl+V (hoặc Cmd+V) hoặc chọn "Chọn ảnh từ Album"!');
+          return;
+        }
+        const clipboardItems = await navigator.clipboard.read();
+        for (const item of clipboardItems) {
+          const imageType = item.types.find(type => type.startsWith('image/'));
+          if (imageType) {
+            const blob = await item.getType(imageType);
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+              showToast('📋 Đã dán ảnh chụp màn hình thành công!');
+              await processImageDataUrl(e.target.result, imageType);
+            };
+            reader.readAsDataURL(blob);
+            return;
+          }
+        }
+        alert('Không tìm thấy hình ảnh nào trong bộ nhớ tạm (Clipboard). Hãy chụp màn hình / Sao chép ảnh trước hoặc bấm "🖼️ Chọn ảnh từ Album"!');
+      } catch (err) {
+        alert('Vui lòng cho phép quyền Dán (Paste) hoặc dùng nút "🖼️ Chọn ảnh từ Album" để chọn ảnh chụp màn hình đã lưu trong máy!');
+      }
+    }
+
+    // 3. Chụp màn hình trực tiếp trên máy tính (Screen Capture API)
+    async function captureScreenDirectly() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        alert('Tính năng chụp màn hình trực tiếp chỉ hỗ trợ trên trình duyệt máy tính. Trên điện thoại, bạn hãy chụp màn hình rồi bấm "🖼️ Chọn ảnh từ Album" hoặc "📋 Dán ảnh"!');
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'never' }, audio: false });
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        await video.play();
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Tắt chia sẻ màn hình ngay sau khi chụp 1 khung hình
+        stream.getTracks().forEach(track => track.stop());
+
+        const dataUrl = canvas.toDataURL('image/png');
+        showToast('🖥️ Đã chụp màn hình thành công!');
+        await processImageDataUrl(dataUrl, 'image/png');
+      } catch (err) {
+        console.log('Đã hủy chụp màn hình:', err);
+      }
+    }
+
+    // Đọc ảnh bằng Google Gemini Vision API
     async function extractImageWithGemini(dataUrl, mimeType, apiKey) {
       try {
-        setOcrProgress('🤖 AI đang đọc hóa đơn / bảng kê doanh thu...', 45, true);
+        setOcrProgress('🤖 AI đang đọc hóa đơn / ảnh chụp màn hình...', 45, true);
         const base64Content = dataUrl.split(',')[1];
         const prompt = `Bạn là trợ lý kế toán Hộ kinh doanh. Hãy trích xuất các khoản doanh thu bán hàng hóa, dịch vụ từ hình ảnh này.
 Trả về kết quả CHỈ LÀ MỘT MẢNG JSON hợp lệ theo cấu trúc:
 [{"date": "YYYY-MM-DD", "desc": "Nội dung giao dịch", "amount": 150000}]
 Quy tắc:
 - Nếu ảnh không ghi năm hoặc ngày, dùng ngày hôm nay là ${getTodayIso()}.
-- Nếu là hóa đơn lẻ chỉ có Tổng thanh toán, trả về 1 phần tử gồm tên cửa hàng/mặt hàng chính và tổng tiền thanh toán.
+- Nếu là hóa đơn lẻ hoặc ảnh chuyển khoản chỉ có Tổng thanh toán, trả về 1 phần tử gồm nội dung/tên khách và tổng tiền.
 - Nếu là bảng kê hoặc sổ ghi chép nhiều dòng, trích xuất đầy đủ từng dòng.
-- amount phải là số nguyên VNĐ (ví dụ 150k -> 150000).`;
+- amount phải là số nguyên VNĐ.`;
 
         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
@@ -1061,19 +1229,18 @@ Quy tắc:
             amount: parseRawAmount(item.amount)
           }));
         } else {
-          stagingRows = [{ selected: true, date: getTodayIso(), desc: 'Doanh thu theo ảnh chụp', amount: 0 }];
+          stagingRows = [{ selected: true, date: getTodayIso(), desc: 'Doanh thu theo ảnh', amount: 0 }];
         }
         setOcrProgress('', 100, false);
         renderStagingTable();
         showToast(`Đã trích xuất ${stagingRows.length} dòng! Hãy kiểm tra trước khi lưu.`);
       } catch (err) {
-        console.error(err);
         setOcrProgress('Chuyển sang OCR nội bộ...', 60, true);
         await extractImageWithLocalOCR(dataUrl);
       }
     }
 
-    // Cách 1B: Đọc ảnh bằng Tesseract.js OCR ngay trên trình duyệt (Không cần API Key)
+    // Đọc ảnh bằng Tesseract.js OCR
     async function extractImageWithLocalOCR(dataUrl) {
       try {
         setOcrProgress('🔍 Đang nhận diện chữ tiếng Việt từ ảnh (0%)...', 10, true);
@@ -1096,13 +1263,11 @@ Quy tắc:
         showToast('Đã quét ảnh xong! Bạn có thể chỉnh sửa lại các ô bên dưới.');
       } catch (err) {
         setOcrProgress('', 0, false);
-        stagingRows = [{ selected: true, date: getTodayIso(), desc: 'Doanh thu theo ảnh chụp', amount: 0 }];
+        stagingRows = [{ selected: true, date: getTodayIso(), desc: 'Doanh thu theo ảnh', amount: 0 }];
         renderStagingTable();
-        alert('Không thể tự động đọc chữ từ ảnh này. Bạn có thể nhìn ảnh bên trái và gõ số tiền vào bảng bên phải!');
       }
     }
 
-    // Thuật toán tách Ngày, Nội dung và Số tiền từ văn bản OCR
     function parseOcrTextToRows(text) {
       const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 2);
       const detectedDateMatch = text.match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/);
@@ -1113,19 +1278,12 @@ Quy tắc:
       let totalCandidate = null;
 
       for (const line of lines) {
-        // Tìm các con số định dạng tiền Việt Nam: 150.000, 1,250,000, 250000, 150k
         const moneyMatches = line.match(/(\d{1,3}(?:[\.,]\d{3})+|\d{4,9}|\d+\s*[kK])\b/g);
         if (!moneyMatches) continue;
 
         const lastToken = moneyMatches[moneyMatches.length - 1];
-        let amount = 0;
-        if (/k$/i.test(lastToken)) {
-          amount = parseRawAmount(lastToken) * 1000;
-        } else {
-          amount = parseRawAmount(lastToken);
-        }
+        let amount = /k$/i.test(lastToken) ? parseRawAmount(lastToken) * 1000 : parseRawAmount(lastToken);
 
-        // Lọc bỏ năm (2025, 2026) hoặc số điện thoại/mã số dài
         if (amount < 1000 || (amount >= 2020 && amount <= 2035) || amount > 5000000000) continue;
 
         const rowDateMatch = line.match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/);
@@ -1138,9 +1296,7 @@ Quy tắc:
           .replace(/\s+(đ|vnd|vnđ)\b/gi, '')
           .trim();
 
-        if (!cleanDesc || cleanDesc.length < 2) {
-          cleanDesc = 'Doanh thu bán hàng hóa, dịch vụ';
-        }
+        if (!cleanDesc || cleanDesc.length < 2) cleanDesc = 'Doanh thu bán hàng hóa, dịch vụ';
 
         if (totalKeywords.test(line)) {
           totalCandidate = { selected: true, date: rowDate, desc: cleanDesc, amount };
@@ -1154,7 +1310,7 @@ Quy tắc:
       return [{ selected: true, date: defaultDate, desc: 'Doanh thu bán hàng hóa, dịch vụ', amount: 0 }];
     }
 
-    // Cách 2: Import từ file Excel / CSV
+    // Import từ file Excel / CSV
     function handleExcelSelected(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1173,7 +1329,6 @@ Quy tắc:
             const joined = r.join(' ').toLowerCase();
             if (joined.includes('ngày tháng') || joined.includes('tổng cộng') || joined.includes('mẫu số s1a')) continue;
 
-            // Tìm cột số tiền và nội dung
             let rowDate = getTodayIso();
             let rowDesc = '';
             let rowAmount = 0;
@@ -1206,14 +1361,9 @@ Quy tắc:
           document.getElementById('rawOcrBox').style.display = 'none';
           document.getElementById('stagingWorkspace').style.display = 'grid';
 
-          if (imported.length === 0) {
-            alert('Không tìm thấy dòng doanh thu hợp lệ trong file Excel. Bạn có thể tự thêm dòng bên dưới!');
-            stagingRows = [{ selected: true, date: getTodayIso(), desc: '', amount: 0 }];
-          } else {
-            stagingRows = imported;
-            showToast(`Đã đọc ${imported.length} dòng từ file Excel! Hãy kiểm tra lại trước khi lưu.`);
-          }
+          stagingRows = imported.length > 0 ? imported : [{ selected: true, date: getTodayIso(), desc: '', amount: 0 }];
           renderStagingTable();
+          showToast(`Đã đọc ${imported.length} dòng từ file Excel!`);
         } catch (err) {
           alert('Lỗi đọc file Excel/CSV!');
         }
@@ -1222,7 +1372,6 @@ Quy tắc:
       event.target.value = '';
     }
 
-    // Hiển thị bảng Kiểm duyệt & Chỉnh sửa trực tiếp
     function renderStagingTable() {
       const tbody = document.getElementById('stagingTableBody');
       tbody.innerHTML = stagingRows.map((row, idx) => `
@@ -1296,7 +1445,6 @@ Quy tắc:
       document.getElementById('rawOcrBox').style.display = 'none';
     }
 
-    // Lưu các dòng đã kiểm duyệt vào Sổ chính
     function commitStagingToLedger() {
       const validRows = stagingRows.filter(r => r.selected && r.desc.trim() && r.amount > 0);
       if (validRows.length === 0) {
@@ -1320,7 +1468,7 @@ Quy tắc:
       showToast(`✔ Đã ghi ${validRows.length} dòng vào Sổ Doanh Thu!`);
     }
 
-    // --- CÁC HÀM QUẢN LÝ SỔ CHÍNH ---
+    // --- QUẢN LÝ SỔ CHÍNH ---
     function renderQuickChips() {
       const tags = (appState.info.quickTags || '').split(',').map(s => s.trim()).filter(Boolean);
       document.getElementById('descChips').innerHTML = tags
@@ -1413,7 +1561,7 @@ Quy tắc:
       let total = 0;
 
       if (!list.length) {
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="padding: 24px; color: #64748b;">Chưa có giao dịch nào. Bạn có thể nhập bên trái hoặc bấm "📷 Chụp ảnh / Import".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="padding: 24px; color: #64748b;">Chưa có giao dịch nào. Hãy nhập bên trái hoặc bấm "🖼️ Chọn ảnh Album".</td></tr>`;
       } else {
         tbody.innerHTML = list.map(tx => {
           total += tx.amount;
